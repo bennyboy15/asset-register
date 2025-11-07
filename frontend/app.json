@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "asset_regsiter_rn",
-    "slug": "asset_regsiter_rn",
+    "name": "frontend",
+    "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "assetregsiterrn",
+    "scheme": "frontend",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
