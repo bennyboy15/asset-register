@@ -1,6 +1,18 @@
-import { Text, View } from "react-native";
+import { useQuery } from "@tanstack/react-query"
+import AssetCard from './components/AssetCard'
+import {axiosInstance} from "./lib/axios.js"
+import { View } from "react-native";
 
 export default function Index() {
+  const { data: assets } = useQuery({
+    queryKey: ["assets"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/asset");
+      return res.data;
+    }
+  });
+
+
   return (
     <View
       style={{
@@ -9,7 +21,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      {assets?.map(asset => (
+        <AssetCard name={asset.name} key={asset._id}/>
+      ))}
     </View>
-  );
+  )
 }
