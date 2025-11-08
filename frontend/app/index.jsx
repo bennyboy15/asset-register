@@ -22,7 +22,7 @@ export default function Index() {
       }}
     >
       {assets?.map(asset => (
-        <AssetCard name={asset.name} key={asset._id}/>
+        <AssetCard id={asset._id} name={asset.name} key={asset._id}/>
       ))}
     </View>
   )
