@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios.js';
 import Toast from 'react-native-toast-message';
@@ -35,18 +35,28 @@ export default function AssetCard({ id, name }) {
     <View style={styles.container}>
       <Text style={styles.title}>{name}</Text>
 
+      <View style={styles.buttonContainer}>
+      <TouchableOpacity
+        style={styles.editButton}
+        onPress={() => console.log("EDIT")} // todo: Add edit functionality
+      >
+        <Pencil color="white" size={20} />
+      </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.deleteButton}
         onPress={() => handleDelete(id)}
       >
         <Trash2 color="white" size={20} />
       </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    width:"100%",
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 12,
@@ -62,7 +72,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 3,
-    marginVertical: 8,
+    marginVertical: 4,
   },
   title: {
     fontSize: 16,
@@ -74,4 +84,14 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
   },
+  editButton: {
+    backgroundColor: '#ffa500',
+    padding: 8,
+    borderRadius: 8,
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 4
+  }
 });

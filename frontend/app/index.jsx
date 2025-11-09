@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
-import AssetCard from './components/AssetCard'
-import {axiosInstance} from "./lib/axios.js"
+import AssetCard from '../components/AssetCard.jsx'
+import { axiosInstance } from "../lib/axios.js"
 import { View } from "react-native";
 
-export default function Index() {
+
+export default function Home() {
+
   const { data: assets } = useQuery({
     queryKey: ["assets"],
     queryFn: async () => {
@@ -12,18 +14,18 @@ export default function Index() {
     }
   });
 
-
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
+        padding: 8
       }}
     >
       {assets?.map(asset => (
-        <AssetCard id={asset._id} name={asset.name} key={asset._id}/>
+        <AssetCard id={asset._id} name={asset.name} key={asset._id} />
       ))}
+
     </View>
   )
 }
