@@ -1,13 +1,19 @@
 import Asset from "../models/asset.model.js";
+import User from "../models/user.model.js";
 
 export async function getAssets(req, res) {
-    try {
-        const assets = await Asset.find();
-        return res.status(200).json(assets);
-    } catch (error) {
-        console.log("Error in getAssets @ assets controller");
-        return res.status(500).json({ message: "Internal Server Error" });
-    }
+  try {
+    const { responsible } = req.query;
+
+    const query = responsible ? { responsible_user: responsible } : {}; // empty filter = all assets
+
+    const assets = await Asset.find(query);
+    
+    return res.status(200).json(assets);
+  } catch (error) {
+    console.log("Error in getAssets @ assets controller", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
 export async function getSpecificAsset(req, res) {
@@ -25,13 +31,18 @@ export async function getSpecificAsset(req, res) {
 
 export async function createAsset(req, res) {
     try {
-        const { name, lastService, nextService } = req.body;
+        const { name, lastService, nextService, responsible_user } = req.body;
 
-        if (!name || !nextService) {
+        if (!name || !nextService || !responsible_user) {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
-        const asset = new Asset({ name, lastService, nextService });
+        const user = await User.findById(responsible_user);
+        if (!user) {
+            return res.status(400).json({message: "Responsible user does not exist!"});
+        }
+
+        const asset = new Asset({ name, lastService, nextService, responsible_user });
         await asset.save();
 
         return res.status(201).json(asset);

@@ -14,6 +14,10 @@ const assetSchema = mongoose.Schema({
     nextService: {
         type: Date,
     },  
+    responsible_user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }
 }, {timestamps: true});
 
 const Asset = mongoose.model("Asset", assetSchema);
