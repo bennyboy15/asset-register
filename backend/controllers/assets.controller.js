@@ -7,7 +7,7 @@ export async function getAssets(req, res) {
 
     const query = responsible ? { responsible_user: responsible } : {}; // empty filter = all assets
 
-    const assets = await Asset.find(query);
+    const assets = await Asset.find(query).populate("responsible_user");
     
     return res.status(200).json(assets);
   } catch (error) {

@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios.js';
 import Toast from 'react-native-toast-message';
 
-export default function AssetCard({ id, name }) {
+export default function AssetCard({ asset }) {
   const queryClient = useQueryClient();
 
   const { mutate: deleteAsset } = useMutation({
@@ -29,26 +29,61 @@ export default function AssetCard({ id, name }) {
 
   function handleDelete(id) {
     deleteAsset(id);
+  };
+
+  function getStatus(asset) {
+    if (!asset?.nextService) return 0;
+
+    const nextServiceDate = new Date(asset.nextService);
+    const today = new Date();
+
+    // 14 days in milliseconds
+    const fourteenDays = 14 * 24 * 60 * 60 * 1000;
+
+    // If service date is before today → overdue
+    if (nextServiceDate < today) {
+      return "Overdue"; // overdue
+    }
+
+    // If service date is within 14 days from today → upcoming
+    if (nextServiceDate - today <= fourteenDays) {
+      return "Upcoming"; // upcoming
+    }
+
+    // Otherwise → ok
+    return "OK"; // ok
   }
+
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{name}</Text>
+
+      <Text style={[
+        getStatus(asset) === "Overdue" && styles.overdue,
+        getStatus(asset) === "Upcoming" && styles.upcoming,
+        getStatus(asset) === "OK" && styles.ok]}>
+          {getStatus(asset)}
+      </Text>
+
+      <View style={{ display: "flex", flexDirection: "column" }}>
+        <Text style={styles.title}>{asset.name}</Text>
+        <Text style={styles.subtitle}>{asset.responsible_user?.name}</Text>
+      </View>
 
       <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={styles.editButton}
-        onPress={() => console.log("EDIT")} // todo: Add edit functionality
-      >
-        <Pencil color="white" size={20} />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => console.log("EDIT")} // todo: Add edit functionality
+        >
+          <Pencil color="white" size={20} />
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => handleDelete(id)}
-      >
-        <Trash2 color="white" size={20} />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDelete(id)}
+        >
+          <Trash2 color="white" size={20} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -56,7 +91,7 @@ export default function AssetCard({ id, name }) {
 
 const styles = StyleSheet.create({
   container: {
-    width:"100%",
+    width: "100%",
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 12,
@@ -64,7 +99,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap:16,
+    gap: 16,
     alignItems: 'center',
     backgroundColor: '#fff',
     shadowColor: '#000',
@@ -79,10 +114,29 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
   },
+  overdue: {
+    backgroundColor: '#e63946',
+    padding: 8,
+    borderRadius: 8,
+    color:"white"
+  },
+  upcoming: {
+    backgroundColor: '#e67e39ff',
+    padding: 8,
+    borderRadius: 8,
+    color:"white"
+  },
+  ok: {
+    backgroundColor: '#117623ff',
+    padding: 8,
+    borderRadius: 8,
+    color:"white"
+  },
   deleteButton: {
     backgroundColor: '#e63946',
     padding: 8,
     borderRadius: 8,
+    color:"white"
   },
   editButton: {
     backgroundColor: '#ffa500',

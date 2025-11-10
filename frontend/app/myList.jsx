@@ -31,7 +31,7 @@ export default function MyList() {
       }}
     >
       {my_assets?.map(asset => (
-        <AssetCard id={asset._id} name={asset.name} key={asset._id} />
+        <AssetCard key={asset._id} asset={asset}/>
       ))}
 
     </View>

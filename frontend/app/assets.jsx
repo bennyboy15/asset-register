@@ -4,11 +4,12 @@ import { axiosInstance } from "../lib/axios.js"
 import { View } from "react-native";
 
 export default function assets() {
-    
+
   const { data: assets } = useQuery({
     queryKey: ["assets"],
     queryFn: async () => {
       const res = await axiosInstance.get("/asset");
+      console.log(res.data);
       return res.data;
     }
   });
@@ -22,7 +23,7 @@ export default function assets() {
       }}
     >
       {assets?.map(asset => (
-        <AssetCard id={asset._id} name={asset.name} key={asset._id} />
+        <AssetCard key={asset._id} asset={asset} />
       ))}
 
     </View>
