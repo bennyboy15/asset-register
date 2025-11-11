@@ -19,7 +19,7 @@ export async function getAssets(req, res) {
 export async function getSpecificAsset(req, res) {
     try {
         const { id } = req.params;
-        const asset = await Asset.findById(id);
+        const asset = await Asset.findById(id).populate("responsible_user");
         if (!asset) return res.status(400).json({ message: "No asset found" });
         return res.status(200).json(asset);
     } catch (error) {

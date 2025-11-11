@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Toast from "react-native-toast-message";
 
-export default function AssetForm({ responsible_user }) {
+export default function AssetForm() {
   const queryClient = useQueryClient();
 
   const { control, handleSubmit, reset } = useForm({
@@ -14,12 +14,21 @@ export default function AssetForm({ responsible_user }) {
       assetImage: "",
       lastService: "",
       nextService: "",
+      responsible_user: ""
     },
+  });
+
+  const { data: users } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/auth/users");
+      return res.data;
+    }
   });
 
   const { mutate: createAsset, isPending } = useMutation({
     mutationFn: async (data) => {
-      const payload = { ...data, responsible_user };
+      const payload = { ...data };
       return axiosInstance.post("/asset", payload);
     },
     onSuccess: () => {
@@ -95,6 +104,19 @@ export default function AssetForm({ responsible_user }) {
             onChangeText={onChange}
           />
         )}
+      />
+
+      <Controller
+        control={control}
+        name="responsible_user"
+        render={({ field: { onChange, value } }) => (
+          <select style={styles.input} name="responsible_user" id="" onChange={onChange} value={value} placeholder="Select responsible user">
+            <option value="">Select responsible user</option>
+            {users?.map((user) => (
+              <option key={user._id} value={user._id}>{user.name}</option>
+            ))}
+          </select>
+        )} 
       />
 
       <Button

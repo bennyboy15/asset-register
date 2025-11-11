@@ -1,9 +1,9 @@
-import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios.js';
 import Toast from 'react-native-toast-message';
+import { useRouter } from "expo-router";
 
 export default function AssetCard({ asset }) {
   const queryClient = useQueryClient();
@@ -54,9 +54,10 @@ export default function AssetCard({ asset }) {
     return "OK"; // ok
   }
 
+  const router = useRouter();
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={() => router.replace(`/asset/${asset._id}`)}>
 
       <Text style={[
         getStatus(asset) === "Overdue" && styles.overdue,
@@ -80,12 +81,12 @@ export default function AssetCard({ asset }) {
 
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDelete(id)}
+          onPress={() => handleDelete(asset._id)}
         >
           <Trash2 color="white" size={20} />
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -115,18 +116,27 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   overdue: {
+    width: 90,
+    fontWeight: "bold",
+    textAlign:"center",
     backgroundColor: '#e63946',
     padding: 8,
     borderRadius: 8,
     color:"white"
   },
   upcoming: {
+    width: 90,
+    fontWeight: "bold",
+    textAlign:"center",
     backgroundColor: '#e67e39ff',
     padding: 8,
     borderRadius: 8,
     color:"white"
   },
   ok: {
+    width: 90,
+    fontWeight: "bold",
+    textAlign:"center",
     backgroundColor: '#117623ff',
     padding: 8,
     borderRadius: 8,

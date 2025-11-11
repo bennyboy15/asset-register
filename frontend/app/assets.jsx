@@ -3,7 +3,7 @@ import AssetCard from '../components/AssetCard.jsx'
 import { axiosInstance } from "../lib/axios.js"
 import { View } from "react-native";
 
-export default function assets() {
+export default function Assets() {
 
   const { data: assets } = useQuery({
     queryKey: ["assets"],

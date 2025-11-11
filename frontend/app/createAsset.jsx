@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import AssetForm from "../components/AssetForm.jsx";
 
-export default function createAsset() {
+export default function CreateAsset() {
   return (
     <View>
       <AssetForm/>
     </View>
   )
 }
-
-const styles = StyleSheet.create({})

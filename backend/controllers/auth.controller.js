@@ -119,6 +119,12 @@ export function getCurrentUser(req,res) {
     }
 };
 
-export function adminTest(req,res) {
-    console.log("ADMIN")
-}
+export async function getUsers(req,res) {
+    try {
+        const users = await User.find().select("-password");
+        return res.status(200).json(users);
+    } catch (error) {
+        console.log("Error in getUsers controller:", error.message);
+        res.status(500).json({success:false, message: "Internal Server Error"});
+    }
+};
