@@ -3,13 +3,30 @@ import { Tabs, useRouter } from "expo-router";
 import { ClipboardList, Home, Package, Plus } from "lucide-react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { axiosInstance } from "../../lib/axios.js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 
 export default function TabsLayout() {
   const router = useRouter();
 
   const queryClient = useQueryClient();
+
+  const { data: current_user } = useQuery({
+    queryKey: ["current_user"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/auth/me");
+      return res.data;
+    }
+  });
+
+  const { data: my_assets } = useQuery({
+    queryKey: ["my_assets", current_user?._id],
+    queryFn: async () => {
+      const res = await axiosInstance.get(`/asset?responsible=${current_user._id}`);
+      return res.data;
+    },
+    enabled: !!current_user, // wait for current_user to load
+  });
 
   const { mutate: logout } = useMutation({
     mutationFn: async () => {
@@ -61,6 +78,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <ClipboardList color={color} size={size} />
           ),
+          tabBarBadge: my_assets?.length
         }}
       />
       <Tabs.Screen

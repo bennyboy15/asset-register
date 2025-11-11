@@ -1,10 +1,8 @@
-import React from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Toast from "react-native-toast-message";
-import DatePicker from "react-native-date-picker";
 import { CrossPlatformDatePicker } from "./CrossPlatformDatePicker";
 
 export default function AssetForm() {
@@ -50,7 +48,7 @@ export default function AssetForm() {
   const onSubmit = (data) => createAsset(data);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.heading}>Add New Asset</Text>
 
       <Controller
@@ -112,7 +110,7 @@ export default function AssetForm() {
         onPress={handleSubmit(onSubmit)}
         disabled={isPending}
       />
-    </View>
+    </ScrollView>
   );
 }
 

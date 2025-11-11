@@ -18,12 +18,14 @@ export default function AssetCard({ asset }) {
       Toast.show({
         type: 'success',
         text1: 'Successfully deleted asset',
+        visibilityTime: 1000
       });
     },
     onError: (error) => {
       Toast.show({
         type: 'error',
         text1: error?.response?.data?.message || 'Something went wrong',
+        visibilityTime: 1000
       });
     },
   });
