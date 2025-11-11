@@ -1,4 +1,3 @@
-// app/(tabs)/_layout.jsx
 import { Tabs, useRouter } from "expo-router";
 import { ClipboardList, Home, Package, Plus } from "lucide-react";
 import { Pressable, StyleSheet, Text } from "react-native";
@@ -84,11 +83,11 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="CreateAsset"
         options={{
-          title: "Create",
+          title: "Create Asset",
           tabBarIcon: ({ color, size }) => <Plus color={color} size={size} />,
         }}
       />
-      <Tabs.Screen name="asset/[id]" options={{ href: null }} />
+      <Tabs.Screen name="asset/[id]" options={{ title:"Asset Details", href: null }} />
     </Tabs>
   );
 }
