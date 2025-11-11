@@ -14,6 +14,7 @@ export default function AssetCard({ asset }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assets'] });
+      queryClient.invalidateQueries({ queryKey: ['my_assets'] });
       Toast.show({
         type: 'success',
         text1: 'Successfully deleted asset',

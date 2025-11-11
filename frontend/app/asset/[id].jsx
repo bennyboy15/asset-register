@@ -98,8 +98,8 @@ export default function Asset() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
-        alignItems: 'center'
+        padding: 0,        
+        alignItems: 'center',
     },
     center: {
         flex: 1,
@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     image: {
+        position: "fixed",
         width: '100%',
-        height: 220,
+        height: '90%',
         borderRadius: 8,
         marginBottom: 12,
         backgroundColor: '#eee'
@@ -122,10 +123,15 @@ const styles = StyleSheet.create({
         color: '#666'
     },
     card: {
-        width: '100%',
+        position: "fixed",
+        bottom: "0",
+        margin: 30,
+        width: '95%',
         padding: 12,
         backgroundColor: 'white',
         borderRadius: 8,
+        borderColor: "#f7f7f7",
+        borderWidth: 2,
         shadowColor: '#000',
         shadowOpacity: 0.05,
         shadowRadius: 6,

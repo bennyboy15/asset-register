@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Toast from "react-native-toast-message";
+import DatePicker from "react-native-date-picker";
+import { CrossPlatformDatePicker } from "./CrossPlatformDatePicker";
 
 export default function AssetForm() {
   const queryClient = useQueryClient();
@@ -12,8 +14,8 @@ export default function AssetForm() {
     defaultValues: {
       name: "",
       assetImage: "",
-      lastService: "",
-      nextService: "",
+      lastService: new Date(),
+      nextService: new Date(),
       responsible_user: ""
     },
   });
@@ -84,12 +86,10 @@ export default function AssetForm() {
         control={control}
         name="lastService"
         render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Last Service Date (YYYY-MM-DD)"
-            value={value}
-            onChangeText={onChange}
-          />
+          <View style={{ marginBottom: 12 }}>
+            <Text style={{ marginBottom: 4 }}>Last Service</Text>
+            <CrossPlatformDatePicker value={value} onChange={onChange} />
+          </View>
         )}
       />
 
@@ -97,27 +97,14 @@ export default function AssetForm() {
         control={control}
         name="nextService"
         render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Next Service Date (YYYY-MM-DD)"
-            value={value}
-            onChangeText={onChange}
-          />
+          <View style={{ marginBottom: 12 }}>
+            <Text style={{ marginBottom: 4 }}>Next Service</Text>
+            <CrossPlatformDatePicker value={value} onChange={onChange} />
+          </View>
         )}
       />
 
-      <Controller
-        control={control}
-        name="responsible_user"
-        render={({ field: { onChange, value } }) => (
-          <select style={styles.input} name="responsible_user" id="" onChange={onChange} value={value} placeholder="Select responsible user">
-            <option value="">Select responsible user</option>
-            {users?.map((user) => (
-              <option key={user._id} value={user._id}>{user.name}</option>
-            ))}
-          </select>
-        )} 
-      />
+      <Controller control={control} name="responsible_user" render={({ field: { onChange, value } }) => (<select style={styles.input} name="responsible_user" id="" onChange={onChange} value={value} placeholder="Select responsible user"> <option value="">Select responsible user</option> {users?.map((user) => (<option key={user._id} value={user._id}>{user.name}</option>))} </select>)} />
 
       <Button
         title={isPending ? "Saving..." : "Create Asset"}
