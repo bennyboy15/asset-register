@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator } from "react-native";
+import { Button, View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import { axiosInstance } from "../lib/axios";
+import { axiosInstance } from "../../lib/axios";
 import Toast from "react-native-toast-message";
 
 export default function Login() {
@@ -21,7 +21,7 @@ export default function Login() {
       const res = await axiosInstance.post('/auth/login', { username, password });
       Toast.show({ type: 'success', text1: res?.data?.message || 'Logged in' });
       // navigate to home
-      router.replace('/');
+      router.replace('/(tabs)/');
     } catch (err) {
       const message = err?.response?.data?.message || err.message || 'Login failed';
       Toast.show({ type: 'error', text1: message });
@@ -54,6 +54,8 @@ export default function Login() {
       <Pressable style={styles.button} onPress={handleSubmit} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff"/> : <Text style={styles.buttonText}>Login</Text>}
       </Pressable>
+
+      <Button title="Go to Signup" onPress={() => router.push("/(auth)/signup")} />
     </View>
   );
 }

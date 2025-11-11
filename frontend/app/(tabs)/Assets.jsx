@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import AssetCard from '../components/AssetCard.jsx'
-import { axiosInstance } from "../lib/axios.js"
+import AssetCard from '../../components/AssetCard.jsx'
+import { axiosInstance } from "../../lib/axios.js"
 import { View } from "react-native";
 
 export default function Assets() {

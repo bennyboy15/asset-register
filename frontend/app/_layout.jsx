@@ -1,27 +1,38 @@
-import { Tabs } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Toast from "react-native-toast-message"
-import { ClipboardList, Home, Package, Plus } from "lucide-react";
+import { Slot, useRouter } from "expo-router";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { axiosInstance } from "../lib/axios";
+import Toast from "react-native-toast-message";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
-export default function RootLayout() {
+function AuthGate() {
+  const router = useRouter();
 
+  const { data: current_user, isLoading } = useQuery({
+    queryKey: ["current_user"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/auth/me");
+      return res.data;
+    },
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!current_user) router.replace("/(auth)/login");
+    }
+  }, [isLoading, current_user]);
+
+  if (isLoading) return null; // Optional: splash/loading screen
+
+  return <Slot />;
+}
+
+export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Tabs screenOptions={{ tabBarActiveTintColor: "red", tabBarShowLabel: false }}>
-
-        <Tabs.Screen name="Login" options={{ title: "Login", href: null }} />
-        <Tabs.Screen name="Signup" options={{ title: "Create", href: null }} />
-
-        <Tabs.Screen name="index" options={{ title: "Home", tabBarIcon: ({ color, size }) => (<Home color={color} size={size} />) }} />
-        <Tabs.Screen name="Assets" options={{ title: "Assets", tabBarIcon: ({ color, size }) => (<Package color={color} size={size} />) }} />
-        <Tabs.Screen name="myList" options={{ title: "My List", tabBarBadge: 1, tabBarIcon: ({ color, size }) => (<ClipboardList color={color} size={size} />) }} />
-        <Tabs.Screen name="CreateAsset" options={{ title: "Create", tabBarIcon: ({ color, size }) => (<Plus color={color} size={size} />) }} />
-
-        <Tabs.Screen name="asset" options={{ href: null }} />
-        <Tabs.Screen name="asset/[id]" options={{ href: null }} />
-      </Tabs>
+      <AuthGate />
       <Toast />
     </QueryClientProvider>
   );

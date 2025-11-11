@@ -36,6 +36,7 @@ export default function AssetForm() {
     onSuccess: () => {
       Toast.show({ type: "success", text1: "Asset created successfully" });
       queryClient.invalidateQueries({ queryKey: ["assets"] });
+      queryClient.invalidateQueries({ queryKey: ["my_assets"] });
       reset();
     },
     onError: (error) => {

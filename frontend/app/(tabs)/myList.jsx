@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
-import AssetCard from '../components/AssetCard';
-import { axiosInstance } from '../lib/axios.js';
+import AssetCard from '../../components/AssetCard.jsx';
+import { axiosInstance } from '../../lib/axios.js';
 
 export default function MyList() {
   const { data: current_user } = useQuery({
