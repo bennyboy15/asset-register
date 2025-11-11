@@ -3,31 +3,32 @@ import { Button, View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator
 import { useRouter } from "expo-router";
 import { axiosInstance } from "../../lib/axios";
 import Toast from "react-native-toast-message";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const {mutate:login, isPending:loading} = useMutation({
+    mutationFn: async (data) => {
+        await axiosInstance.post('/auth/login', data);
+    },
+    onSuccess: () => {
+      Toast.show({ type: 'success', text1: "Successfully logged in" });
+      queryClient.invalidateQueries({queryKey:["current_user"]});
+      router.replace('/(tabs)');
+    },
+    onError: (error) => {
+      const message = error?.response?.data?.message || error.message || 'Login failed';
+      Toast.show({ type: 'error', text1: message });
+    }
+  })
 
   async function handleSubmit() {
-    if (!username || !password) {
-      Toast.show({ type: 'error', text1: 'Please fill in all fields' });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await axiosInstance.post('/auth/login', { username, password });
-      Toast.show({ type: 'success', text1: res?.data?.message || 'Logged in' });
-      // navigate to home
-      router.replace('/(tabs)/');
-    } catch (err) {
-      const message = err?.response?.data?.message || err.message || 'Login failed';
-      Toast.show({ type: 'error', text1: message });
-    } finally {
-      setLoading(false);
-    }
+    login({username, password});
   }
 
   return (
@@ -55,7 +56,7 @@ export default function Login() {
         {loading ? <ActivityIndicator color="#fff"/> : <Text style={styles.buttonText}>Login</Text>}
       </Pressable>
 
-      <Button title="Go to Signup" onPress={() => router.push("/(auth)/signup")} />
+      <Button title="Go to Signup" onPress={() => router.replace("/(auth)/Signup")} />
     </View>
   );
 }
