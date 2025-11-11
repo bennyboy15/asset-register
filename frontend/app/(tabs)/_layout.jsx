@@ -11,17 +11,18 @@ export default function TabsLayout() {
 
   const queryClient = useQueryClient();
 
-  const {mutate: logout} = useMutation({
+  const { mutate: logout } = useMutation({
     mutationFn: async () => {
       return await axiosInstance.post("/auth/logout");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["current_user"]});
-      Toast.show({type:"success", text1:"Logged out"});
-      router.replace("/(auth)/Signup");
+      // Remove cached current_user so AuthGate will detect logged out state
+      try { queryClient.removeQueries(["current_user"]); } catch (_) { }
+      Toast.show({ type: "success", text1: "Logged out" });
+      router.replace("/(auth)/Login");
     },
     onError: () => {
-      Toast.show({type:"error", text1:"Error logging out"});
+      Toast.show({ type: "error", text1: "Error logging out" });
     }
   })
 
@@ -36,7 +37,7 @@ export default function TabsLayout() {
             <Text style={styles.buttonText}>Logout</Text>
           </Pressable>
         ),
-        headerRightContainerStyle:{marginRight: 10}
+        headerRightContainerStyle: { marginRight: 10 }
       }}
     >
       <Tabs.Screen
@@ -78,14 +79,14 @@ export default function TabsLayout() {
 const styles = StyleSheet.create({
   buttonText: {
     color: "white",
-    fontWeight:"bold"
+    fontWeight: "bold"
   },
   logoutButton: {
     backgroundColor: "red",
     borderRadius: 10,
     height: "60%",
     padding: 8,
-    textAlign:"center",
-    verticalAlign:"middle"
+    textAlign: "center",
+    verticalAlign: "middle"
   }
 })
