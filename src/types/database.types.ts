@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -19,18 +19,21 @@ export type Database = {
           assetTypeId: number | null
           created_at: string
           id: number
+          isActive: boolean
           name: string | null
         }
         Insert: {
           assetTypeId?: number | null
           created_at?: string
           id?: number
+          isActive?: boolean
           name?: string | null
         }
         Update: {
           assetTypeId?: number | null
           created_at?: string
           id?: number
+          isActive?: boolean
           name?: string | null
         }
         Relationships: [
