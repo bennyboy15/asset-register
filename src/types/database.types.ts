@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      test: {
+      AssetRegister: {
+        Row: {
+          assetTypeId: number | null
+          created_at: string
+          id: number
+          name: string | null
+        }
+        Insert: {
+          assetTypeId?: number | null
+          created_at?: string
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          assetTypeId?: number | null
+          created_at?: string
+          id?: number
+          name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "AssetRegister_assetTypeId_fkey"
+            columns: ["assetTypeId"]
+            isOneToOne: false
+            referencedRelation: "AssetTypes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      AssetTypes: {
         Row: {
           created_at: string
           id: number
