@@ -9,7 +9,10 @@ export function useAssets(filters: AssetFilters = {}) {
     return useQuery({
         queryKey: ["assets", { isActive, assetTypeId, search }],
         queryFn: async () => {
-            let query = supabase.from("AssetRegister").select("*").eq("isActive", isActive);
+            let query = supabase
+                .from("AssetRegister")
+                .select("*, assetType:AssetTypes(*)")
+                .eq("isActive", isActive);
 
             if (assetTypeId !== undefined) {
                 query = query.eq("assetTypeId", assetTypeId);
@@ -21,6 +24,26 @@ export function useAssets(filters: AssetFilters = {}) {
             const { data, error } = await query;
             if (error) throw error;
             return data;
+        },
+    });
+}
+
+export function useAssetCount(filters: AssetFilters = {}) {
+    const { isActive = true, assetTypeId } = filters;
+    return useQuery({
+        queryKey: ["assets", { isActive, assetTypeId }],
+        queryFn: async () => {
+            let query = supabase
+                .from("AssetRegister")
+                .select("*", { count: "exact", head: true })
+                .eq("isActive", isActive);
+
+            if (assetTypeId !== undefined) {
+                query = query.eq("assetTypeId", assetTypeId);
+            }
+
+            const { count } = await query;
+            return count ?? 0;
         },
     });
 }
